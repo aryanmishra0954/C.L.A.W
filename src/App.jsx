@@ -9,7 +9,7 @@ function App() {
       <Routes>
         <Route path="/" element={<ValidationHistory />} />
         <Route path="/validate" element={<ValidateUpload />} />
-        <Route path="/validateResult"element = {<ValidationResults/>}/>
+        <Route path="/dashboard/validation/:id" element={<ValidationResults />} />
       </Routes>
     </BrowserRouter>
   )
