@@ -1,0 +1,39 @@
+.claw-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  line-height: 1;
+}
+
+.claw-logo__mark {
+  width: 1.9em;
+  height: 1.9em;
+  color: var(--claw-blue, #2563eb);
+  flex-shrink: 0;
+}
+
+.claw-logo__word {
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--claw-navy, #0b1c3d);
+}
+
+.claw-logo--light .claw-logo__word {
+  color: #ffffff;
+}
+
+.claw-logo--light .claw-logo__mark {
+  color: #ffffff;
+}
+
+.claw-logo--sm {
+  font-size: 15px;
+}
+
+.claw-logo--md {
+  font-size: 20px;
+}
+
+.claw-logo--lg {
+  font-size: 30px;
+}
