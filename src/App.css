@@ -1,0 +1,6 @@
+/* App-wide layout styling. Page-specific styles live in src/pages/*.css */
+
+.app-shell {
+  min-height: 100vh;
+  width: 100%;
+}
