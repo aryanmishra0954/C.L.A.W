@@ -1,15 +1,19 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar.jsx";
+import Logo from "../components/Logo.jsx";
 import "./AuthPage.css";
 
-const brandLogos = {
+const logos = {
   google: "https://thesvg.org/icons/google/default.svg",
   microsoft: "https://thesvg.org/icons/microsoft/default.svg",
   entra: "https://thesvg.org/icons/microsoft-azure/default.svg",
 };
 
-export default function AuthPage({ onNavigate }) {
-  const [mode, setMode] = useState("signin");
+export default function AuthPage({
+  onNavigate,
+  initialMode = "signin",
+}) {
+  const [mode, setMode] = useState(initialMode);
   const [showPassword, setShowPassword] = useState(false);
 
   const isSignUp = mode === "signup";
@@ -19,7 +23,7 @@ export default function AuthPage({ onNavigate }) {
       <main className="auth-layout">
         <section className="auth-left">
           <div className="auth-left-content">
-            <div className="auth-logo-mark">C</div>
+            <Logo size="lg" showText={false} />
 
             <p className="auth-eyebrow">
               LEGAL TECH + AI + COMPLIANCE
@@ -46,7 +50,7 @@ export default function AuthPage({ onNavigate }) {
               </div>
 
               <div className="auth-card ai-card">
-                <div className="auth-ai-mark">C</div>
+                <Logo size="md" showText={false} />
                 <strong>AI Analysis</strong>
               </div>
 
@@ -79,7 +83,7 @@ export default function AuthPage({ onNavigate }) {
             <div className="auth-tabs">
               <button
                 type="button"
-                className={mode === "signin" ? "active" : ""}
+                className={!isSignUp ? "active" : ""}
                 onClick={() => setMode("signin")}
               >
                 Sign In
@@ -87,7 +91,7 @@ export default function AuthPage({ onNavigate }) {
 
               <button
                 type="button"
-                className={mode === "signup" ? "active" : ""}
+                className={isSignUp ? "active" : ""}
                 onClick={() => setMode("signup")}
               >
                 Sign Up
@@ -104,17 +108,17 @@ export default function AuthPage({ onNavigate }) {
 
             <div className="social-login">
               <button type="button">
-                <img src={brandLogos.google} alt="Google" />
+                <img src={logos.google} alt="Google" />
                 <span>Continue with Google</span>
               </button>
 
               <button type="button">
-                <img src={brandLogos.microsoft} alt="Microsoft" />
+                <img src={logos.microsoft} alt="Microsoft" />
                 <span>Continue with Microsoft</span>
               </button>
 
               <button type="button">
-                <img src={brandLogos.entra} alt="Microsoft Entra ID" />
+                <img src={logos.entra} alt="Microsoft Entra ID" />
                 <span>
                   Continue with Microsoft Entra ID
                   <small>Work / School Account</small>
@@ -149,11 +153,6 @@ export default function AuthPage({ onNavigate }) {
                 <button
                   type="button"
                   onClick={() => setShowPassword((value) => !value)}
-                  aria-label={
-                    showPassword
-                      ? "Hide password"
-                      : "Show password"
-                  }
                 >
                   {showPassword ? "Hide" : "Show"}
                 </button>
@@ -177,9 +176,7 @@ export default function AuthPage({ onNavigate }) {
 
               <button
                 type="button"
-                onClick={() =>
-                  setMode(isSignUp ? "signin" : "signup")
-                }
+                onClick={() => setMode(isSignUp ? "signin" : "signup")}
               >
                 {isSignUp ? "Sign In" : "Create account"}
               </button>

@@ -4,15 +4,30 @@ import AuthPage from "./pages/AuthPage.jsx";
 
 export default function App() {
   const [page, setPage] = useState("landing");
+  const [authMode, setAuthMode] = useState("signin");
 
   const handleNavigate = (nextPage) => {
-    setPage(nextPage);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (nextPage === "signin" || nextPage === "signup") {
+      setAuthMode(nextPage);
+      setPage("auth");
+    } else {
+      setPage(nextPage);
+    }
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
-  return page === "auth" ? (
-    <AuthPage onNavigate={handleNavigate} />
-  ) : (
-    <LandingPage onNavigate={handleNavigate} />
-  );
+  if (page === "auth") {
+    return (
+      <AuthPage
+        onNavigate={handleNavigate}
+        initialMode={authMode}
+      />
+    );
+  }
+
+  return <LandingPage onNavigate={handleNavigate} />;
 }
