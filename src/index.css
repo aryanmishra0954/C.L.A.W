@@ -1,6 +1,26 @@
-@import "tailwindcss";
+html {
+  background: #f7faff;
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 body {
-  background-color: #0a0a0a;
-  color: #e5e5e5;
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: #f7faff;
+}
+
+button:focus-visible,
+a:focus-visible,
+select:focus-visible {
+  outline: 2px solid #2f69d9;
+  outline-offset: 3px;
+}
+
+#root {
+  min-height: 100vh;
 }

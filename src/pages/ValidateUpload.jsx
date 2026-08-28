@@ -1,112 +1,141 @@
-import { useState, useRef } from 'react'
-import {api} from '../lib/api'
+import { useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Icon } from '../App'
+
 function ValidateUpload() {
-  const [file, setFile] = useState(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const inputRef = useRef(null)
+  const navigate = useNavigate()
+  const fileInputRef = useRef(null)
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [knowledgeBase, setKnowledgeBase] = useState('Product documentation')
+  const [isValidating, setIsValidating] = useState(false)
+  const [dragActive, setDragActive] = useState(false)
 
-  const handleFileChange = (e) => {
-    const selected = e.target.files[0]
-    setFile(selected)
+  const acceptFile = (file) => {
+    if (!file) return
+    setSelectedFile(file)
   }
 
-  const handleDrop = (e) => {
-    e.preventDefault()
-    setIsDragging(false)
-    const dropped = e.dataTransfer.files[0]
-    if (dropped) {
-      setFile(dropped)
-    }
+  const handleFileChange = (event) => {
+    acceptFile(event.target.files?.[0])
   }
 
-  const handleDragOver = (e) => {
-    e.preventDefault()
-    setIsDragging(true)
+  const handleValidate = () => {
+    if (!selectedFile || isValidating) return
+    setIsValidating(true)
+    window.setTimeout(() => navigate('/validateResult'), 850)
   }
 
-  const handleDragLeave = () => {
-    setIsDragging(false)
-  }
-
-  const handleRemove = () => {
-    setFile(null)
-  }
-
-  const handleBrowseClick = () => {
-    inputRef.current.click()
-  }
-  
- const handleUpload = async () => {
-  const formData = new FormData()
-  formData.append('file', file)
-  formData.append('title', file.name)
-
-  try {
-    const response = await api.post('/api/validate', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-    console.log('validation_id:', response.data.validation_id)
-    console.log('status:', response.data.status)
-  } catch (error) {
-    console.error('Upload failed:', error)
-  }
-}
   return (
-    <main className="max-w-lg mx-auto p-6">
-      <h1 className="text-lg font-medium mb-1 text-white">Validate a document</h1>
-      <p className="text-sm text-gray-400 mb-6">
-        Upload a document to check it against your knowledge base.
-      </p>
-
-      <div
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        className={`border-2 border-dashed rounded-xl px-6 py-10 text-center bg-neutral-900 ${
-          isDragging ? 'border-blue-500' : 'border-neutral-700'
-        }`}
-      >
-        <p className="text-sm mb-1 text-white">Drag and drop a file here</p>
-        <p className="text-xs text-gray-500 mb-4">
-          Supports PDF, DOCX, and scanned images
-        </p>
-
-        <button
-          onClick={handleBrowseClick}
-          className="text-sm border border-neutral-600 rounded-md px-4 py-2 bg-neutral-800 text-white hover:bg-neutral-700"
-        >
-          Browse files
-        </button>
-
-        <input
-          ref={inputRef}
-          type="file"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-
-        {file && (
-          <div className="mt-4 flex items-center justify-center gap-2 text-sm text-white">
-            <span>{file.name}</span>
-            <button
-              onClick={handleRemove}
-              className="text-gray-400 hover:text-gray-200"
-            >
-              ✕
-            </button>
-          </div>
-        )}
+    <section className="page-content upload-page">
+      <div className="page-heading">
+        <div>
+          <div className="eyebrow"><span className="eyebrow-line" /> VALIDATION WORKSPACE</div>
+          <h1>Validate a document<span className="heading-period">.</span></h1>
+          <p className="page-subtitle">Upload a document and check it against your trusted knowledge base.</p>
+        </div>
+        <div className="heading-status">
+          <span className="status-dot" />
+          All systems operational
+        </div>
       </div>
 
-      <button
-  onClick={handleUpload}
-  disabled={!file}
-  className="w-full bg-white text-black rounded-md py-2.5 text-sm mt-5 disabled:bg-neutral-700 disabled:text-neutral-400"
->
-  Upload and validate
-</button>
-    </main>
+      <div className="upload-layout">
+        <div className="upload-main">
+          <div className="panel upload-panel">
+            <div className="panel-topline">
+              <div>
+                <p className="panel-kicker">01 / DOCUMENT</p>
+                <h2>Bring in a file to validate</h2>
+              </div>
+              <span className="step-number">01</span>
+            </div>
+
+            <button
+              className={`drop-zone ${dragActive ? 'drag-active' : ''} ${selectedFile ? 'has-file' : ''}`}
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              onDragEnter={(event) => { event.preventDefault(); setDragActive(true) }}
+              onDragOver={(event) => event.preventDefault()}
+              onDragLeave={() => setDragActive(false)}
+              onDrop={(event) => {
+                event.preventDefault()
+                setDragActive(false)
+                acceptFile(event.dataTransfer.files?.[0])
+              }}
+            >
+              <input
+                ref={fileInputRef}
+                className="visually-hidden"
+                type="file"
+                accept=".pdf,.doc,.docx,.txt"
+                onChange={handleFileChange}
+              />
+              {selectedFile ? (
+                <>
+                  <div className="file-icon"><Icon name="command" size={24} /></div>
+                  <strong>{selectedFile.name}</strong>
+                  <span>{formatFileSize(selectedFile.size)} · Ready for validation</span>
+                  <span className="change-file">Choose a different file</span>
+                </>
+              ) : (
+                <>
+                  <div className="upload-icon"><Icon name="upload" size={25} /></div>
+                  <strong>Drop your document here</strong>
+                  <span>or click to browse from your computer</span>
+                  <small>PDF, DOCX or TXT  25 MB max</small>
+                </>
+              )}
+            </button>
+
+            <div className="format-row">
+              <span><Icon name="command" size={15} /> Text extraction is handled locally</span>
+            
+            </div>
+          </div>
+
+          <div className="panel kb-panel">
+            <div className="panel-topline">
+              <div>
+                <p className="panel-kicker">02 / KNOWLEDGE BASE</p>
+                <h2>Choose what to validate against</h2>
+              </div>
+              <span className="step-number">02</span>
+            </div>
+            <label className="select-label" htmlFor="knowledge-base">Active knowledge base</label>
+            <div className="select-wrap">
+              <select id="knowledge-base" value={knowledgeBase} onChange={(event) => setKnowledgeBase(event.target.value)}>
+                <option>Product documentation</option>
+                <option>Support playbook</option>
+                <option>Security &amp; compliance</option>
+              </select>
+              <span className="select-chevron">⌄</span>
+            </div>
+            <div className="kb-meta">
+              <span className="kb-avatar">PD</span>
+              <div><strong>{knowledgeBase}</strong><span>124 documents · updated 12 min ago</span></div>
+              <span className="ready-pill"><span className="status-dot" /> Ready</span>
+            </div>
+          </div>
+
+          <div className="upload-actions">
+            <button className="secondary-button" type="button" onClick={() => navigate('/history')}>
+              <Icon name="history" size={17} /> View validation history
+            </button>
+            <button className="primary-button" type="button" disabled={!selectedFile || isValidating} onClick={handleValidate}>
+              {isValidating ? <><span className="button-spinner" /> Preparing validation…</> : <>Start validation <Icon name="arrow" size={17} /></>}
+            </button>
+          </div>
+        </div>
+
+      
+              </div>
+    </section>
   )
+}
+
+function formatFileSize(bytes = 0) {
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
 export default ValidateUpload

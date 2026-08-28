@@ -1,62 +1,119 @@
-import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { api } from '../lib/api'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Icon } from '../App'
+
+const runs = [
+  {
+    name: 'employment-agreement.pdf',
+    base: 'Labour Laws & Regulations',
+    date: 'Today, 11:42 AM',
+    score: '96.4%',
+    status: 'Passed',
+    tone: 'passed',
+    sections: '18 / 18',
+  },
+  {
+    name: 'privacy-policy-v2.docx',
+    base: 'DPDP Act, 2023',
+    date: 'Today, 10:26 AM',
+    score: '88.1%',
+    status: 'Review',
+    tone: 'review',
+    sections: '14 / 16',
+  },
+  {
+    name: 'vendor-contract.pdf',
+    base: 'Indian Contract Act',
+    date: 'Today, 09:04 AM',
+    score: '100%',
+    status: 'Passed',
+    tone: 'passed',
+    sections: '11 / 11',
+  },
+  {
+    name: 'data-processing-agreement.pdf',
+    base: 'Data Protection & Privacy',
+    date: 'Yesterday, 04:26 PM',
+    score: '91.6%',
+    status: 'Passed',
+    tone: 'passed',
+    sections: '16 / 16',
+  },
+  {
+    name: 'information-security-policy.pdf',
+    base: 'IT & Cybersecurity Rules',
+    date: 'Yesterday, 01:03 PM',
+    score: '72.8%',
+    status: 'Needs attention',
+    tone: 'attention',
+    sections: '9 / 13',
+  },
+  {
+    name: 'employee-handbook.docx',
+    base: 'Labour & Employment Rules',
+    date: 'Aug 25, 03:18 PM',
+    score: '84.7%',
+    status: 'Review',
+    tone: 'review',
+    sections: '13 / 15',
+  },
+]
 
 function ValidationHistory() {
-  const [validations, setValidations] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const navigate = useNavigate()
+  const [filter, setFilter] = useState('All runs')
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const response = await api.get('/api/validate/history')
-        setValidations(response.data.validations)
-      } catch (err) {
-        console.error('Failed to load history:', err)
-        setError('Could not load your validations.')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchHistory()
-  }, [])
+  const filteredRuns = filter === 'All runs' ? runs : runs.filter((run) => run.status === filter)
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
-      <div className="flex justify-between items-center mb-5">
-        <h1 className="text-lg font-medium text-white">Validations</h1>
-        <Link
-          to="/validate"
-          className="text-sm border border-neutral-600 rounded-md px-4 py-2 bg-neutral-800 text-white hover:bg-neutral-700"
-        >
-          Upload document
-        </Link>
+    <section className="page-content history-page">
+      <div className="page-heading">
+        <div>
+          <div className="eyebrow"><span className="eyebrow-line" /> ACTIVITY LOG</div>
+          <h1>Validation history<span className="heading-period">.</span></h1>
+          <p className="page-subtitle">A clear trail of every document checked by the validation engine.</p>
+        </div>
+        <button className="primary-button compact-button" type="button" onClick={() => navigate('/validate')}>
+          <Icon name="upload" size={16} /> New validation
+        </button>
       </div>
 
-      {loading && <p className="text-sm text-gray-400">Loading...</p>}
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      <div className="metric-grid">
+        <Metric label="Total validations" value="24" change="+8 this week" />
+        <Metric label="Average alignment" value="91.7%" change="+4.2% vs last week" />
+        <Metric label="Needs attention" value="03" change="2 fewer than yesterday" warning />
+      </div>
 
-      {!loading && !error && validations.length === 0 && (
-        <p className="text-sm text-gray-400">
-          No validations yet. Upload a document to get started.
-        </p>
-      )}
+      <div className="history-toolbar">
+        <div className="filter-tabs" role="tablist" aria-label="Filter validation history">
+          {['All runs', 'Passed', 'Review', 'Needs attention'].map((item) => (
+            <button key={item} className={filter === item ? 'selected' : ''} type="button" onClick={() => setFilter(item)}>{item}</button>
+          ))}
+        </div>
+        <span className="results-count">{filteredRuns.length} of {runs.length} runs</span>
+      </div>
 
-      <div className="flex flex-col gap-2">
-        {validations.map((v) => (
-          <div
-            key={v.validation_id}
-            className="bg-neutral-900 border border-neutral-700 rounded-xl px-4 py-3 flex justify-between items-center"
-          >
-            <span className="text-sm text-white">{v.title}</span>
-            <span className="text-xs text-gray-400">{v.status}</span>
-          </div>
+      <div className="panel history-panel">
+        <div className="history-table-head"><span>Document</span><span>Knowledge base</span><span>Run date</span><span>Alignment</span><span>Status</span><span /></div>
+        {filteredRuns.map((run) => (
+          <button className="history-row" type="button" key={run.name} onClick={() => navigate('/validateResult')}>
+            <span className="document-cell"><span className={`document-badge ${run.tone}`}><Icon name="command" size={16} /></span><span><strong>{run.name}</strong><small>{run.sections} sections matched</small></span></span>
+            <span className="muted-cell">{run.base}</span>
+            <span className="muted-cell">{run.date}</span>
+            <span className="score-cell">{run.score}</span>
+            <span><span className={`status-pill ${run.tone}`}><span />{run.status}</span></span>
+            <span className="row-arrow"><Icon name="arrow" size={16} /></span>
+          </button>
         ))}
+        {filteredRuns.length === 0 && <div className="empty-history">No validations match this filter.</div>}
+        <div className="table-foot"><span>Showing local demo data</span><span>Last synced just now</span></div>
       </div>
-    </main>
+    </section>
   )
+}
+
+function Metric({ label, value, change, warning = false }) {
+  return <div className="metric-card"><span>{label}</span><strong className={warning ? 'warning-text' : ''}>{value}</strong><small>{change}</small></div>
 }
 
 export default ValidationHistory

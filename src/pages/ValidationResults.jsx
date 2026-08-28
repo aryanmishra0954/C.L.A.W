@@ -1,84 +1,311 @@
-import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { api } from '../lib/api'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Icon } from '../App'
+
+const sections = [
+  {
+    title: 'Data collection & consent',
+    detail:
+      'The document clearly defines the categories of personal data collected and specifies the consent requirements.',
+    score: '100%',
+    status: 'Matched',
+    tone: 'passed',
+  },
+  {
+    title: 'Data retention',
+    detail:
+      'The stated retention period is not clearly supported by the applicable knowledge base and requires review.',
+    score: '89%',
+    status: 'Review',
+    tone: 'review',
+  },
+  {
+    title: 'User rights',
+    detail:
+      'User rights, access requests, correction mechanisms, and grievance procedures are aligned with the referenced regulations.',
+    score: '97%',
+    status: 'Matched',
+    tone: 'passed',
+  },
+  {
+    title: 'Data security obligations',
+    detail:
+      'Two security obligations require additional supporting references before the policy can be considered fully compliant.',
+    score: '82%',
+    status: 'Needs attention',
+    tone: 'attention',
+  },
+]
 
 function ValidationResults() {
-  const { id } = useParams()
-  const [results, setResults] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        const response = await api.get(`/api/validate/${id}/results`)
-        setResults(response.data)
-      } catch (err) {
-        console.error('Failed to load results:', err)
-        setError('Could not load results for this document.')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchResults()
-  }, [id])
-
-  if (loading) return <main className="max-w-2xl mx-auto p-6 text-sm text-gray-400">Loading results...</main>
-  if (error) return <main className="max-w-2xl mx-auto p-6 text-sm text-red-500">{error}</main>
-  if (!results) return null
+  const navigate = useNavigate()
+  const [expanded, setExpanded] = useState(1)
+  const handleExportReport = () => {
+  window.print()
+}
 
   return (
-    <main className="max-w-2xl mx-auto p-6">
-      <h1 className="text-lg font-medium text-white mb-1">{results.title}</h1>
-      <p className="text-sm text-gray-400 mb-5">Checked against your knowledge base</p>
+    <section className="page-content results-page">
 
-      <div className="grid grid-cols-3 gap-3 mb-5">
-        <div className="bg-neutral-900 rounded-lg p-4">
-          <p className="text-xs text-gray-400 mb-1">Sections checked</p>
-          <p className="text-2xl font-medium text-white">{results.overall_summary.total_sections}</p>
+      <button
+        className="back-link"
+        type="button"
+        onClick={() => navigate('/validate')}
+      >
+        <Icon name="arrow" size={16} /> Back to upload
+      </button>
+
+      <div className="result-heading">
+        <div>
+          <div className="eyebrow">
+            <span className="eyebrow-line" /> VALIDATION COMPLETE
+          </div>
+
+          <h1>
+            data-privacy-policy.pdf
+            <span className="heading-period">.</span>
+          </h1>
+
+          <p className="page-subtitle">
+            Checked against <strong>DPDP Act & Privacy Rules</strong> · just now
+          </p>
         </div>
-        <div className="bg-neutral-900 rounded-lg p-4">
-          <p className="text-xs text-gray-400 mb-1">Compliant</p>
-          <p className="text-2xl font-medium text-green-500">{results.overall_summary.compliant_count}</p>
-        </div>
-        <div className="bg-neutral-900 rounded-lg p-4">
-          <p className="text-xs text-gray-400 mb-1">Non-compliant</p>
-          <p className="text-2xl font-medium text-red-500">{results.overall_summary.non_compliant_count}</p>
+
+        <div className="result-actions">
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={() => navigate('/validate')}
+          >
+            <Icon name="upload" size={16} /> Validate another
+          </button>
+
+          <button
+            className="primary-button compact-button"
+            type="button"
+            onClick={handleExportReport}
+          >
+            <Icon name="command" size={16} /> Export report
+          </button>
         </div>
       </div>
 
-      <div className="flex flex-col gap-3">
-        {results.sections.map((section) => (
-          <div
-            key={section.section_id}
-            className={`rounded-xl border p-4 ${
-              section.compliant
-                ? 'bg-green-950 border-green-800'
-                : 'bg-red-950 border-red-800'
-            }`}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <p className="text-sm font-medium text-white">{section.text}</p>
-              <span
-                className={`text-xs px-2.5 py-1 rounded-md shrink-0 ml-3 ${
-                  section.compliant
-                    ? 'bg-green-800 text-green-200'
-                    : 'bg-red-800 text-red-200'
-                }`}
-              >
-                {section.compliant ? 'Compliant' : 'Non-compliant'}
-              </span>
-            </div>
-            <p className="text-sm text-gray-300 mb-2">{section.reasoning}</p>
-            <div className="flex items-center gap-3 text-xs text-gray-500">
-              <span>Matched: {section.matched_kb_source}</span>
-              <span>Confidence: {Math.round(section.confidence * 100)}%</span>
+      <div className="result-overview">
+
+        <div className="score-card panel">
+          <div className="score-ring">
+            <div>
+              <strong>91.6</strong>
+              <span>/ 100</span>
             </div>
           </div>
-        ))}
+
+          <div>
+            <p className="panel-kicker">OVERALL COMPLIANCE</p>
+            <h2>Strong compliance</h2>
+            <p>
+              Document is largely compliant with a few clauses
+              requiring human review.
+            </p>
+          </div>
+        </div>
+
+        <div className="overview-stat panel">
+          <span className="stat-icon green">
+            <Icon name="chart" size={18} />
+          </span>
+
+          <div>
+            <strong>16 / 16</strong>
+            <span>Sections processed</span>
+          </div>
+
+          <small>100%</small>
+        </div>
+
+        <div className="overview-stat panel">
+          <span className="stat-icon purple">
+            <Icon name="command" size={18} />
+          </span>
+
+          <div>
+            <strong>03</strong>
+            <span>Compliance signals</span>
+          </div>
+
+          <small>Low risk</small>
+        </div>
+
       </div>
-    </main>
+
+      <div className="result-grid">
+
+        <div className="panel sections-panel">
+
+          <div className="panel-topline">
+            <div>
+              <p className="panel-kicker">COMPLIANCE BREAKDOWN</p>
+              <h2>Where the document stands</h2>
+            </div>
+
+            <span className="section-count">04 sections</span>
+          </div>
+
+          <div className="section-list">
+
+            {sections.map((section, index) => (
+
+              <div
+                className={`section-item ${
+                  expanded === index ? 'expanded' : ''
+                }`}
+                key={section.title}
+              >
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setExpanded(
+                      expanded === index ? -1 : index
+                    )
+                  }
+                >
+
+                  <span
+                    className={`section-index ${section.tone}`}
+                  >
+                    0{index + 1}
+                  </span>
+
+                  <span className="section-copy">
+                    <strong>{section.title}</strong>
+
+                    <small>
+                      {expanded === index
+                        ? section.detail
+                        : 'Click to inspect validation signals'}
+                    </small>
+                  </span>
+
+                  <span className="section-score">
+                    <strong>{section.score}</strong>
+
+                    <span
+                      className={`status-pill ${section.tone}`}
+                    >
+                      <span />
+                      {section.status}
+                    </span>
+                  </span>
+
+                  <span
+                    className={`expand-icon ${
+                      expanded === index ? 'open' : ''
+                    }`}
+                  >
+                    +
+                  </span>
+
+                </button>
+
+                {expanded === index && (
+                  <div className="section-detail">
+                    <span className="detail-marker" />
+
+                    <span>
+                      <strong>Signal:</strong>{' '}
+
+                      {index === 1
+                        ? 'The stated data retention period is not explicitly supported by the current legal knowledge base and requires verification.'
+                        : index === 3
+                        ? 'Security obligations are partially matched, but additional regulatory references are recommended.'
+                        : 'No conflicting compliance requirements detected in this section.'}
+                    </span>
+                  </div>
+                )}
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+        <div className="panel confidence-panel">
+
+          <div className="panel-topline">
+            <div>
+              <p className="panel-kicker">
+                COMPLIANCE CONFIDENCE
+              </p>
+
+              <h2>Signal mix</h2>
+            </div>
+
+            <span className="mini-live">
+              <span /> AI ANALYSIS
+            </span>
+          </div>
+
+          <div className="bar-chart">
+
+            <div className="bar-row">
+              <span>Compliant</span>
+
+              <div className="bar-track">
+                <i style={{ width: '82%' }} />
+              </div>
+
+              <strong>82%</strong>
+            </div>
+
+            <div className="bar-row">
+              <span>Needs review</span>
+
+              <div className="bar-track review-track">
+                <i style={{ width: '13%' }} />
+              </div>
+
+              <strong>13%</strong>
+            </div>
+
+            <div className="bar-row">
+              <span>Non-compliant</span>
+
+              <div className="bar-track attention-track">
+                <i style={{ width: '5%' }} />
+              </div>
+
+              <strong>5%</strong>
+            </div>
+
+          </div>
+
+          <div className="confidence-foot">
+
+            <span>
+              <i className="legend-dot covered" />
+              Compliant
+            </span>
+
+            <span>
+              <i className="legend-dot review" />
+              Review
+            </span>
+
+            <span>
+              <i className="legend-dot attention" />
+              Non-compliant
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
   )
 }
 
