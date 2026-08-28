@@ -12,6 +12,7 @@ const logos = {
 export default function AuthPage({
   onNavigate,
   initialMode = "signin",
+  onAuthSuccess,
 }) {
   const [mode, setMode] = useState(initialMode);
   const [showPassword, setShowPassword] = useState(false);
@@ -165,9 +166,13 @@ export default function AuthPage({
               </button>
             )}
 
-            <button className="auth-submit" type="button">
-              {isSignUp ? "Create Account" : "Sign In"}
-            </button>
+<button
+  className="auth-submit"
+  type="button"
+  onClick={() => onAuthSuccess?.()}
+>
+  {isSignUp ? "Create Account" : "Sign In"}
+</button>
 
             <p className="auth-switch">
               {isSignUp

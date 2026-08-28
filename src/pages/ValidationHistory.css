@@ -1,1 +1,269 @@
-/* Styles scoped to ValidationHistory */
+.history-page {
+  min-height: 100vh;
+  background: #f7fbff;
+  color: #102653;
+}
+
+.history-main {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 42px 48px 70px;
+}
+
+.history-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.history-eyebrow {
+  margin: 0 0 10px;
+  color: #2165ed;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.history-heading h1 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 44px);
+  letter-spacing: -1.3px;
+}
+
+.history-heading p:last-child {
+  margin: 10px 0 0;
+  color: #49658f;
+  line-height: 1.5;
+}
+
+.history-primary-button {
+  border: 1px solid #2165ed;
+  border-radius: 7px;
+  padding: 13px 20px;
+  background: #2165ed;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.history-overview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  overflow: hidden;
+  border: 1px solid #d4e2f5;
+  border-radius: 14px;
+  background: #d4e2f5;
+}
+
+.history-overview div {
+  display: grid;
+  gap: 6px;
+  background: #ffffff;
+  padding: 22px;
+}
+
+.history-overview strong {
+  color: #2165ed;
+  font-size: 28px;
+}
+
+.history-overview span {
+  color: #49658f;
+  font-size: 13px;
+}
+
+.history-overview .history-green {
+  color: #16814b;
+}
+
+.history-overview .history-orange {
+  color: #d97824;
+}
+
+.history-card {
+  overflow: hidden;
+  margin-top: 24px;
+  border: 1px solid #d4e2f5;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.history-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px;
+}
+
+.history-card-header h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+}
+
+.history-card-header p {
+  margin: 0;
+  color: #49658f;
+  font-size: 13px;
+}
+
+.history-search {
+  display: flex;
+  width: min(320px, 100%);
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #c9dbf4;
+  border-radius: 8px;
+  padding: 0 13px;
+  color: #49658f;
+}
+
+.history-search input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  padding: 12px 0;
+  color: #102653;
+  font: inherit;
+}
+
+.history-filters {
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid #e4edf8;
+  border-bottom: 1px solid #e4edf8;
+  padding: 14px 24px;
+}
+
+.history-filters button {
+  border: 1px solid #c9dbf4;
+  border-radius: 7px;
+  padding: 9px 14px;
+  background: #ffffff;
+  color: #193975;
+  cursor: pointer;
+}
+
+.history-filters button.active {
+  border-color: #2165ed;
+  background: #2165ed;
+  color: #ffffff;
+}
+
+.history-table-wrapper {
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  min-width: 950px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.history-table th,
+.history-table td {
+  padding: 17px 24px;
+  border-bottom: 1px solid #e4edf8;
+  text-align: left;
+}
+
+.history-table th {
+  color: #7890b3;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.history-table td:first-child {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.history-file-icon {
+  color: #ef6262;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.history-score {
+  color: #2165ed;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.history-score-total {
+  color: #7890b3;
+}
+
+.history-risk,
+.history-status {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.history-risk.low-risk {
+  background: #dcf7e8;
+  color: #16814b;
+}
+
+.history-risk.medium-risk {
+  background: #fff0df;
+  color: #d97824;
+}
+
+.history-risk.high-risk {
+  background: #ffe2e2;
+  color: #c13d3d;
+}
+
+.history-status {
+  background: #eaf2ff;
+  color: #2165ed;
+}
+
+.history-view-button {
+  border: 0;
+  background: transparent;
+  color: #2165ed;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.history-empty {
+  padding: 45px;
+  color: #49658f;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .history-main {
+    padding: 28px 16px 48px;
+  }
+
+  .history-heading,
+  .history-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .history-overview {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .history-search {
+    width: 100%;
+  }
+
+  .history-filters {
+    flex-wrap: wrap;
+    padding: 14px 16px;
+  }
+}
