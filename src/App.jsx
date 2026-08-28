@@ -1,30 +1,64 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LandingPage from "./pages/LandingPage.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 
+function getRoute() {
+  const hash = window.location.hash;
+
+  if (hash === "#auth-signup") {
+    return {
+      page: "auth",
+      authMode: "signup",
+    };
+  }
+
+  if (hash === "#auth-signin") {
+    return {
+      page: "auth",
+      authMode: "signin",
+    };
+  }
+
+  return {
+    page: "landing",
+    authMode: "signin",
+  };
+}
+
 export default function App() {
-  const [page, setPage] = useState("landing");
-  const [authMode, setAuthMode] = useState("signin");
+  const [route, setRoute] = useState(getRoute);
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setRoute(getRoute());
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
 
   const handleNavigate = (nextPage) => {
-    if (nextPage === "signin" || nextPage === "signup") {
-      setAuthMode(nextPage);
-      setPage("auth");
-    } else {
-      setPage(nextPage);
+    if (nextPage === "signup") {
+      window.location.hash = "auth-signup";
+      return;
     }
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
+    if (nextPage === "signin" || nextPage === "auth") {
+      window.location.hash = "auth-signin";
+      return;
+    }
+
+    window.location.hash = "landing";
   };
 
-  if (page === "auth") {
+  if (route.page === "auth") {
     return (
       <AuthPage
         onNavigate={handleNavigate}
-        initialMode={authMode}
+        initialMode={route.authMode}
       />
     );
   }
