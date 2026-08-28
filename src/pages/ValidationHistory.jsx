@@ -2,52 +2,20 @@ import { useMemo, useState } from "react";
 import UserNavbar from "../components/UserNavbar.jsx";
 import "./ValidationHistory.css";
 
-const historyItems = [
-  {
-    id: 1,
-    name: "export_8306018686362875019.pdf",
-    type: "Contract",
-    date: "May 24, 2025 · 10:45 AM",
-    score: 78,
-    risk: "Medium risk",
-    status: "Completed",
-  },
-  {
-    id: 2,
-    name: "GDPR_Compliance_Reg.docx",
-    type: "Regulation",
-    date: "May 23, 2025 · 03:20 PM",
-    score: 94,
-    risk: "Low risk",
-    status: "Completed",
-  },
-  {
-    id: 3,
-    name: "Employee_Handbook_2024.txt",
-    type: "Policy",
-    date: "May 22, 2025 · 11:08 AM",
-    score: 63,
-    risk: "High risk",
-    status: "Completed",
-  },
-  {
-    id: 4,
-    name: "Services_Agreement_Vendor.pdf",
-    type: "Contract",
-    date: "May 20, 2025 · 09:42 AM",
-    score: 86,
-    risk: "Low risk",
-    status: "Completed",
-  },
-];
-
-export default function ValidationHistory({ onNavigate, onSignOut }) {
+export default function ValidationHistory({
+  historyItems = [],
+  userName,
+  onNavigate,
+  onSignOut,
+}) {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
 
   const filteredItems = useMemo(() => {
     return historyItems.filter((item) => {
-      const matchesSearch = item.name
+      const documentName = item.name || item.fileName || "";
+
+      const matchesSearch = documentName
         .toLowerCase()
         .includes(search.toLowerCase());
 
@@ -56,13 +24,35 @@ export default function ValidationHistory({ onNavigate, onSignOut }) {
 
       return matchesSearch && matchesFilter;
     });
-  }, [search, filter]);
+  }, [historyItems, search, filter]);
+
+  const totalValidations = historyItems.length;
+
+  const averageScore =
+    totalValidations > 0
+      ? Math.round(
+          historyItems.reduce(
+            (total, item) => total + Number(item.score || 0),
+            0
+          ) / totalValidations
+        )
+      : 0;
+
+  const lowRiskCount = historyItems.filter(
+    (item) => item.risk === "Low risk"
+  ).length;
+
+  const attentionCount = historyItems.filter(
+    (item) =>
+      item.risk === "Medium risk" ||
+      item.risk === "High risk"
+  ).length;
 
   return (
     <div className="history-page">
       <UserNavbar
         activePage="history"
-        userName="Duann"
+        userName={userName}
         onNavigate={onNavigate}
         onSignOut={onSignOut}
       />
@@ -88,22 +78,26 @@ export default function ValidationHistory({ onNavigate, onSignOut }) {
 
         <section className="history-overview">
           <div>
-            <strong>{historyItems.length}</strong>
+            <strong>{totalValidations}</strong>
             <span>Total validations</span>
           </div>
 
           <div>
-            <strong>80</strong>
+            <strong>{averageScore}</strong>
             <span>Average score</span>
           </div>
 
           <div>
-            <strong className="history-green">3</strong>
+            <strong className="history-green">
+              {lowRiskCount}
+            </strong>
             <span>Low-risk results</span>
           </div>
 
           <div>
-            <strong className="history-orange">1</strong>
+            <strong className="history-orange">
+              {attentionCount}
+            </strong>
             <span>Needs attention</span>
           </div>
         </section>
@@ -112,11 +106,15 @@ export default function ValidationHistory({ onNavigate, onSignOut }) {
           <div className="history-card-header">
             <div>
               <h2>Previous validations</h2>
-              <p>{filteredItems.length} results found</p>
+              <p>
+                {filteredItems.length}{" "}
+                {filteredItems.length === 1 ? "result" : "results"} found
+              </p>
             </div>
 
             <label className="history-search">
               <span aria-hidden="true">⌕</span>
+
               <input
                 type="search"
                 placeholder="Search documents..."
@@ -137,70 +135,101 @@ export default function ValidationHistory({ onNavigate, onSignOut }) {
                 >
                   {item}
                 </button>
-              ),
+              )
             )}
           </div>
 
           <div className="history-table-wrapper">
-            <table className="history-table">
-              <thead>
-                <tr>
-                  <th>Document</th>
-                  <th>Type</th>
-                  <th>Validated on</th>
-                  <th>Score</th>
-                  <th>Risk level</th>
-                  <th>Status</th>
-                  <th />
-                </tr>
-              </thead>
-
-              <tbody>
-                {filteredItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <span className="history-file-icon">PDF</span>
-                      <strong>{item.name}</strong>
-                    </td>
-                    <td>{item.type}</td>
-                    <td>{item.date}</td>
-                    <td>
-                      <span className="history-score">
-                        {item.score}
-                      </span>
-                      <span className="history-score-total">/100</span>
-                    </td>
-                    <td>
-                      <span
-                        className={`history-risk ${item.risk
-                          .toLowerCase()
-                          .replace(" ", "-")}`}
-                      >
-                        {item.risk}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="history-status">
-                        {item.status}
-                      </span>
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        className="history-view-button"
-                        onClick={() => onNavigate("results")}
-                      >
-                        View
-                      </button>
-                    </td>
+            {filteredItems.length > 0 ? (
+              <table className="history-table">
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Type</th>
+                    <th>Validated on</th>
+                    <th>Score</th>
+                    <th>Risk level</th>
+                    <th>Status</th>
+                    <th />
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
 
-            {filteredItems.length === 0 && (
+                <tbody>
+                  {filteredItems.map((item) => {
+                    const documentName =
+                      item.name || item.fileName || "Untitled document";
+
+                    const score = Number(item.score || 0);
+
+                    return (
+                      <tr key={item.id}>
+                        <td>
+                          <span className="history-file-icon">
+                            {item.type === "PDF" ? "PDF" : "FILE"}
+                          </span>
+
+                          <strong>{documentName}</strong>
+                        </td>
+
+                        <td>{item.documentType || item.type || "Document"}</td>
+
+                        <td>
+                          {item.date ||
+                            item.validatedAt ||
+                            "Not available"}
+                        </td>
+
+                        <td>
+                          <span className="history-score">
+                            {score}
+                          </span>
+
+                          <span className="history-score-total">
+                            /100
+                          </span>
+                        </td>
+
+                        <td>
+                          <span
+                            className={`history-risk ${
+                              item.risk
+                                ? item.risk
+                                    .toLowerCase()
+                                    .replace(/\s+/g, "-")
+                                : ""
+                            }`}
+                          >
+                            {item.risk || "Not assessed"}
+                          </span>
+                        </td>
+
+                        <td>
+                          <span className="history-status">
+                            {item.status || "Completed"}
+                          </span>
+                        </td>
+
+                        <td>
+                          <button
+                            type="button"
+                            className="history-view-button"
+                            onClick={() =>
+                              onNavigate("results", item)
+                            }
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            ) : (
               <div className="history-empty">
-                No validation records match your search.
+                {historyItems.length === 0
+                  ? "No validation history yet."
+                  : "No validation records match your search."}
               </div>
             )}
           </div>

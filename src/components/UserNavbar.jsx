@@ -10,13 +10,13 @@ export default function UserNavbar({
 }) {
   const [profileOpen, setProfileOpen] = useState(false);
 
-  const links = [
+  const navigationItems = [
     { label: "Knowledge Base", page: "knowledge-base" },
     { label: "Validate", page: "validate" },
     { label: "History", page: "history" },
   ];
 
-  const navigateFromMenu = (page) => {
+  const goTo = (page) => {
     setProfileOpen(false);
     onNavigate(page);
   };
@@ -27,39 +27,39 @@ export default function UserNavbar({
         <button
           type="button"
           className="user-navbar__logo"
-          onClick={() => onNavigate("knowledge-base")}
-          aria-label="Go to Knowledge Base"
+          onClick={() => goTo("knowledge-base")}
+          aria-label="Open Knowledge Base"
         >
           <Logo size="md" />
         </button>
 
         <nav
           className="user-navbar__links"
-          aria-label="Workspace navigation"
+          aria-label="Main navigation"
         >
-          {links.map((link) => (
+          {navigationItems.map((item) => (
             <button
-              key={link.page}
+              key={item.page}
               type="button"
               className={`user-navbar__link ${
-                activePage === link.page
+                activePage === item.page
                   ? "user-navbar__link--active"
                   : ""
               }`}
-              onClick={() => onNavigate(link.page)}
+              onClick={() => goTo(item.page)}
             >
-              {link.label}
+              {item.label}
             </button>
           ))}
         </nav>
 
         <div className="user-navbar__right">
-          <div className="user-navbar__trust" aria-label="Security status">
+          <div className="user-navbar__trust">
             <span className="user-navbar__shield">✓</span>
             <span>Secure</span>
-            <b aria-hidden="true">•</b>
+            <b>•</b>
             <span>Trusted</span>
-            <b aria-hidden="true">•</b>
+            <b>•</b>
             <span>Enterprise Ready</span>
           </div>
 
@@ -67,9 +67,9 @@ export default function UserNavbar({
             <button
               type="button"
               className="user-navbar__profile-button"
-              onClick={() => setProfileOpen((open) => !open)}
-              aria-expanded={profileOpen}
+              onClick={() => setProfileOpen((current) => !current)}
               aria-haspopup="menu"
+              aria-expanded={profileOpen}
             >
               <span className="user-navbar__avatar">
                 {userName.charAt(0).toUpperCase()}
@@ -83,7 +83,7 @@ export default function UserNavbar({
                 }`}
                 aria-hidden="true"
               >
-               ⌄
+                ⌄
               </span>
             </button>
 
@@ -91,20 +91,20 @@ export default function UserNavbar({
               <div
                 className="user-navbar__menu"
                 role="menu"
-                aria-label="Account menu"
+                aria-label="Profile menu"
               >
                 <button
                   type="button"
                   role="menuitem"
-                  onClick={() => navigateFromMenu("settings")}
+                  onClick={() => goTo("settings")}
                 >
-                  Profile
+                  Profile &amp; settings
                 </button>
 
                 <button
                   type="button"
                   role="menuitem"
-                  onClick={() => navigateFromMenu("knowledge-base")}
+                  onClick={() => goTo("knowledge-base")}
                 >
                   Workspace
                 </button>

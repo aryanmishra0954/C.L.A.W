@@ -1,82 +1,128 @@
 .claw-logo {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 10px;
+  width: max-content;
+  height: auto;
+  margin: 0;
+  padding: 0;
   line-height: 1;
   white-space: nowrap;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .claw-logo__mark {
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  flex: 0 0 46px;
+
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px;
+  min-height: 42px;
+  flex: 0 0 42px;
+
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
   border-radius: 50%;
   background: #2165ed;
   color: #ffffff;
+
   overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  position: relative;
 }
 
 .claw-logo__letter {
-  display: block;
+  display: block !important;
+
   margin: 0;
   padding: 0 0 2px 1px;
-  color: #ffffff;
+
+  color: #ffffff !important;
+
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 32px;
+  font-size: 29px;
   font-weight: 700;
   line-height: 1;
+
   text-align: center;
+  opacity: 1;
+  visibility: visible;
 }
 
 .claw-logo__text {
-  display: block;
-  color: #102653;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 22px;
+  display: inline-block !important;
+
+  margin: 0;
+  padding: 0;
+
+  color: #102653 !important;
+
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-size: 20px;
   font-weight: 800;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   line-height: 1;
+
+  opacity: 1;
+  visibility: visible;
 }
 
-/* Small navbar logo */
+/* =========================
+   SMALL
+   ========================= */
+
 .claw-logo--sm .claw-logo__mark {
-  width: 40px;
-  height: 40px;
-  flex-basis: 40px;
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px;
+  min-height: 36px;
+  flex-basis: 36px;
 }
 
 .claw-logo--sm .claw-logo__letter {
-  font-size: 28px;
+  font-size: 25px;
 }
 
-.claw-logo--sm .claw-logo__text {
-  font-size: 20px;
-  letter-spacing: 3px;
-}
+/* =========================
+   MEDIUM
+   ========================= */
 
-/* Default logo */
 .claw-logo--md .claw-logo__mark {
-  width: 46px;
-  height: 46px;
-  flex-basis: 46px;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px;
+  min-height: 42px;
+  flex-basis: 42px;
 }
 
-/* Large auth-page logo */
+.claw-logo--md .claw-logo__letter {
+  font-size: 29px;
+}
+
+/* =========================
+   LARGE
+   ========================= */
+
 .claw-logo--lg .claw-logo__mark {
-  width: 70px;
-  height: 70px;
-  flex-basis: 70px;
+  width: 68px !important;
+  height: 68px !important;
+  min-width: 68px;
+  min-height: 68px;
+  flex-basis: 68px;
 }
 
 .claw-logo--lg .claw-logo__letter {
-  font-size: 48px;
+  font-size: 46px;
 }
 
 .claw-logo--lg .claw-logo__text {
-  font-size: 30px;
-  letter-spacing: 5px;
+  font-size: 29px;
+  letter-spacing: 4px;
 }

@@ -7,42 +7,39 @@ import ValidateUpload from "./pages/ValidateUpload.jsx";
 import ValidationResults from "./pages/ValidationResults.jsx";
 import ValidationHistory from "./pages/ValidationHistory.jsx";
 import ProfileSettings from "./pages/ProfileSettings.jsx";
+
 function getInitialRoute() {
   const hash = window.location.hash;
 
-  if (hash === "#auth-signup") {
-    return { page: "auth", authMode: "signup" };
-  }
+  switch (hash) {
+    case "#auth-signup":
+      return { page: "auth", authMode: "signup" };
 
-  if (hash === "#auth-signin") {
-    return { page: "auth", authMode: "signin" };
-  }
+    case "#auth-signin":
+      return { page: "auth", authMode: "signin" };
 
-  if (hash === "#kb-upload") {
-    return { page: "upload" };
-  }
+    case "#kb-upload":
+      return { page: "upload" };
 
-  if (hash === "#knowledge-base") {
-    return { page: "knowledge-base" };
-  }
+    case "#knowledge-base":
+      return { page: "knowledge-base" };
 
-  if (hash === "#validate") {
-    return { page: "validate" };
-  }
+    case "#validate":
+      return { page: "validate" };
 
-  if (hash === "#results") {
-    return { page: "results" };
-  }
+    case "#results":
+      return { page: "results" };
 
-  if (hash === "#history") {
-    return { page: "history" };
-  }
+    case "#history":
+      return { page: "history" };
 
-  if (hash === "#settings") {
-    return { page: "settings" };
-  }
+    case "#settings":
+    case "#profile":
+      return { page: "settings" };
 
-  return { page: "landing" };
+    default:
+      return { page: "landing" };
+  }
 }
 
 export default function App() {
@@ -61,52 +58,45 @@ export default function App() {
   }, []);
 
   const handleNavigate = (nextPage) => {
-    if (nextPage === "signup") {
-      window.location.hash = "auth-signup";
-      return;
-    }
+    switch (nextPage) {
+      case "signup":
+        window.location.hash = "auth-signup";
+        break;
 
-    if (nextPage === "signin" || nextPage === "auth") {
-      window.location.hash = "auth-signin";
-      return;
-    }
+      case "signin":
+      case "auth":
+        window.location.hash = "auth-signin";
+        break;
 
-    if (nextPage === "workspace") {
-      window.location.hash = "knowledge-base";
-      return;
-    }
+      case "workspace":
+      case "knowledge-base":
+        window.location.hash = "knowledge-base";
+        break;
 
-    if (nextPage === "upload") {
-      window.location.hash = "kb-upload";
-      return;
-    }
+      case "upload":
+        window.location.hash = "kb-upload";
+        break;
 
-    if (nextPage === "knowledge-base") {
-      window.location.hash = "knowledge-base";
-      return;
-    }
+      case "validate":
+        window.location.hash = "validate";
+        break;
 
-    if (nextPage === "validate") {
-      window.location.hash = "validate";
-      return;
-    }
+      case "results":
+        window.location.hash = "results";
+        break;
 
-    if (nextPage === "results") {
-      window.location.hash = "results";
-      return;
-    }
+      case "history":
+        window.location.hash = "history";
+        break;
 
-    if (nextPage === "history") {
-      window.location.hash = "history";
-      return;
-    }
+      case "settings":
+      case "profile":
+        window.location.hash = "settings";
+        break;
 
-    if (nextPage === "settings" || nextPage === "profile") {
-      window.location.hash = "settings";
-      return;
+      default:
+        window.location.hash = "landing";
     }
-
-    window.location.hash = "landing";
   };
 
   const handleSignOut = () => {
@@ -160,22 +150,22 @@ export default function App() {
   }
 
   if (route.page === "history") {
-      return (
-        <ValidationHistory
-          onNavigate={handleNavigate}
-          onSignOut={handleSignOut}
-        />
-      );
+    return (
+      <ValidationHistory
+        onNavigate={handleNavigate}
+        onSignOut={handleSignOut}
+      />
+    );
   }
 
   if (route.page === "settings") {
-  return (
-    <ProfileSettings
-      onNavigate={handleNavigate}
-      onSignOut={handleSignOut}
-    />
-  );
-}
+    return (
+      <ProfileSettings
+        onNavigate={handleNavigate}
+        onSignOut={handleSignOut}
+      />
+    );
+  }
 
   return <LandingPage onNavigate={handleNavigate} />;
 }
