@@ -1,76 +1,141 @@
 .claw-nav {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background: #fff;
-  border-bottom: 1px solid var(--claw-line, #e6ecf5);
+  width: 100%;
+  height: 68px;
+  background: #ffffff;
+  border-bottom: 1px solid #e3ebf7;
+  z-index: 10;
 }
 
 .claw-nav__inner {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2.25rem;
-  height: 74px;
   display: flex;
   align-items: center;
-  gap: 2.5rem;
+  justify-content: space-between;
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 48px;
 }
 
 .claw-nav__brand {
-  background: none;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
   border: 0;
-  padding: 0;
+  background: transparent;
   cursor: pointer;
 }
 
 .claw-nav__links {
   display: flex;
   align-items: center;
-  gap: 2.25rem;
+  justify-content: center;
+  gap: 44px;
   margin: 0 auto;
 }
 
 .claw-nav__link {
-  color: var(--claw-slate, #475569);
-  text-decoration: none;
-  font-size: 0.95rem;
+  color: #193975;
+  font-size: 14px;
   font-weight: 500;
-  transition: color 0.15s ease;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
 .claw-nav__link:hover {
-  color: var(--claw-blue, #2563eb);
+  color: #1761ed;
 }
 
 .claw-nav__actions {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 24px;
+  flex-shrink: 0;
 }
 
 .claw-nav__signin {
-  background: none;
   border: 0;
-  padding: 0;
-  font-family: inherit;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--claw-navy, #0b1c3d);
+  background: transparent;
+  color: #102653;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .claw-nav__signin:hover {
-  color: var(--claw-blue, #2563eb);
+  color: #1761ed;
 }
 
-@media (max-width: 1024px) {
-  .claw-nav__links,
+/* Auth page navbar */
+.auth-right .claw-nav {
+  width: calc(100% + 16%);
+  margin-left: -8%;
+}
+
+.auth-right .claw-nav__inner {
+  justify-content: center;
+  padding: 0 32px;
+}
+
+.auth-right .claw-nav__brand,
+.auth-right .claw-nav__actions {
+  display: none;
+}
+
+.auth-right .claw-nav__links {
+  gap: 44px;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .claw-nav__inner {
+    padding: 0 28px;
+  }
+
+  .claw-nav__links {
+    gap: 24px;
+  }
+
+  .auth-right .claw-nav {
+    width: calc(100% + 14%);
+    margin-left: -7%;
+  }
+}
+
+@media (max-width: 640px) {
+  .claw-nav {
+    height: 62px;
+  }
+
+  .claw-nav__inner {
+    padding: 0 18px;
+  }
+
+  .claw-nav__brand {
+    transform: scale(0.85);
+    transform-origin: left center;
+  }
+
+  .claw-nav__links {
+    gap: 14px;
+  }
+
+  .claw-nav__link {
+    font-size: 11px;
+  }
+
+  .claw-nav__actions {
+    gap: 10px;
+  }
+
   .claw-nav__signin {
     display: none;
   }
 
-  .claw-nav__inner {
-    padding: 0 1.25rem;
+  .auth-right .claw-nav__links {
     justify-content: space-between;
+    width: 100%;
+    gap: 10px;
   }
 }

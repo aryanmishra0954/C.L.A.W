@@ -1,53 +1,192 @@
-import { useState } from 'react'
-import { ArrowRight, Check, Eye, EyeOff, FileText, LockKeyhole, Mail, ShieldCheck, Sparkles, Zap } from 'lucide-react'
-import './AuthPage.css'
+import { useState } from "react";
+import Navbar from "../components/Navbar.jsx";
+import "./AuthPage.css";
 
-const benefits = [
-  { icon: ShieldCheck, label: 'Faster', detail: 'Verification' },
-  { icon: Sparkles, label: 'Reduce', detail: 'Legal Risk' },
-  { icon: Zap, label: 'Scale', detail: 'Effortlessly' },
-  { icon: LockKeyhole, label: 'Built on', detail: 'Microsoft Azure' },
-]
+const brandLogos = {
+  google: "https://thesvg.org/icons/google/default.svg",
+  microsoft: "https://thesvg.org/icons/microsoft/default.svg",
+  entra: "https://thesvg.org/icons/microsoft-azure/default.svg",
+};
 
-export default function AuthPage() {
-  const [mode, setMode] = useState('signin')
-  const [showPassword, setShowPassword] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+export default function AuthPage({ onNavigate }) {
+  const [mode, setMode] = useState("signin");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isSignUp = mode === "signup";
 
   return (
-    <main className="auth-shell">
-      <section className="auth-story" aria-label="About CLAW">
-        <div className="story-content">
-          <div className="brand"><span className="brand-mark">C</span><span>CLAW</span></div>
-          <p className="eyebrow">LEGAL TECH + AI + COMPLIANCE</p>
-          <h1>Intelligent compliance <span>starts here.</span></h1>
-          <p className="story-copy">Upload your documents, leverage the power of AI, and get accurate compliance insights — faster, safer, and smarter.</p>
-          <div className="process-visual" aria-label="Document analysis process">
-            <div className="doc-card"><FileText size={30} /><strong>CONTRACT</strong><i /><i /><i /><ShieldCheck className="doc-check" size={28} /></div>
-            <div className="connector">→</div><div className="ai-core"><span>C</span><small>AI</small></div><div className="connector">→</div>
-            <div className="laws-card"><strong>Relevant Laws</strong><p><Check size={14} /> GDPR Article 6</p><p><Check size={14} /> Data Protection Act</p><p><Check size={14} /> Corporate Law</p><p><Check size={14} /> Employment Law</p></div>
+    <div className="auth-page">
+      <main className="auth-layout">
+        <section className="auth-left">
+          <div className="auth-left-content">
+            <div className="auth-logo-mark">C</div>
+
+            <p className="auth-eyebrow">
+              LEGAL TECH + AI + COMPLIANCE
+            </p>
+
+            <h1>
+              Intelligent compliance
+              <span>starts here.</span>
+            </h1>
+
+            <p className="auth-description">
+              Upload your documents, leverage the power of AI, and get
+              accurate compliance insights — faster, safer, and smarter.
+            </p>
+
+            <div className="auth-cards">
+              <div className="auth-card document-card">
+                <strong>CONTRACT</strong>
+                <i />
+                <i />
+                <i />
+                <i />
+                <i />
+              </div>
+
+              <div className="auth-card ai-card">
+                <div className="auth-ai-mark">C</div>
+                <strong>AI Analysis</strong>
+              </div>
+
+              <div className="auth-card laws-card">
+                <strong>Relevant Laws</strong>
+                <p>GDPR Article 6</p>
+                <p>Data Protection Act</p>
+                <p>Corporate Law</p>
+                <p>Employment Law</p>
+              </div>
+            </div>
+
+            <div className="auth-benefits">
+              <span>Faster Verification</span>
+              <span>Reduce Legal Risk</span>
+              <span>Scale Effortlessly</span>
+              <span>Built on Microsoft Azure</span>
+            </div>
           </div>
-          <div className="process-labels"><div><strong>Your Documents</strong><span>Contracts, agreements,<br />regulations and more.</span></div><div><strong>AI Analysis</strong><span>RAG-powered accuracy<br />with trusted sources.</span></div><div><strong>Compliance Results</strong><span>Clear insights, explanations<br />and risk analysis.</span></div></div>
-          <div className="benefits">{benefits.map(({ icon: Icon, label, detail }) => <div key={detail}><Icon size={23} /><span>{label}<br />{detail}</span></div>)}</div>
-        </div>
-      </section>
-      <section className="auth-panel">
-        <div className="trust-row"><ShieldCheck size={22} /><span>Secure</span><b>•</b><span>Trusted</span><b>•</b><span>Enterprise Ready</span></div>
-        <div className="auth-form-wrap">
-          <div className="mode-tabs"><button className={mode === 'signin' ? 'active' : ''} onClick={() => { setMode('signin'); setSubmitted(false) }}>Sign In</button><button className={mode === 'signup' ? 'active' : ''} onClick={() => { setMode('signup'); setSubmitted(false) }}>Sign Up</button></div>
-          <h2>{mode === 'signin' ? 'Welcome back' : 'Create your account'}</h2><p className="form-subtitle">{mode === 'signin' ? 'Sign in to your CLAW account to continue.' : 'Start making compliance intelligent today.'}</p>
-          <div className="social-buttons"><button><span className="google">G</span> Continue with Google</button><button><span className="microsoft"><i /><i /><i /><i /></span> Continue with Microsoft</button><button><span className="azure">◆</span><span>Continue with Microsoft Entra ID<small>(Work / School Account)</small></span></button></div>
-          <div className="or"><span />OR<span /></div>
-          <form onSubmit={(event) => { event.preventDefault(); setSubmitted(true) }}>
-            {mode === 'signup' && <label>Full Name<input required placeholder="Your full name" /></label>}
-            <label>Email Address<div className="input-wrap"><Mail size={20} /><input required type="email" placeholder="you@company.com" /></div></label>
-            <label>Password<div className="input-wrap"><LockKeyhole size={20} /><input required type={showPassword ? 'text' : 'password'} placeholder="Enter your password" /><button type="button" className="icon-button" onClick={() => setShowPassword(!showPassword)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={20} /> : <Eye size={20} />}</button></div></label>
-            {mode === 'signin' && <button type="button" className="forgot">Forgot password?</button>}
-            <button className="submit-button" type="submit">{submitted ? 'You’re all set' : mode === 'signin' ? 'Sign In' : 'Create account'} <ArrowRight size={21} /></button>
-          </form>
-          <p className="switch-copy">{mode === 'signin' ? "Don't have an account?" : 'Already have an account?'} <button onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}>{mode === 'signin' ? 'Create account' : 'Sign in'} <ArrowRight size={16} /></button></p>
-        </div>
-      </section>
-    </main>
-  )
+        </section>
+
+        <section className="auth-right">
+          <Navbar onNavigate={onNavigate} authMode />
+
+          <div className="auth-trust">
+            Secure <b>•</b> Trusted <b>•</b> Enterprise Ready
+          </div>
+
+          <div className="auth-form">
+            <div className="auth-tabs">
+              <button
+                type="button"
+                className={mode === "signin" ? "active" : ""}
+                onClick={() => setMode("signin")}
+              >
+                Sign In
+              </button>
+
+              <button
+                type="button"
+                className={mode === "signup" ? "active" : ""}
+                onClick={() => setMode("signup")}
+              >
+                Sign Up
+              </button>
+            </div>
+
+            <h2>{isSignUp ? "Create your account" : "Welcome back"}</h2>
+
+            <p className="auth-subtitle">
+              {isSignUp
+                ? "Create your CLAW account to get started."
+                : "Sign in to your CLAW account to continue."}
+            </p>
+
+            <div className="social-login">
+              <button type="button">
+                <img src={brandLogos.google} alt="Google" />
+                <span>Continue with Google</span>
+              </button>
+
+              <button type="button">
+                <img src={brandLogos.microsoft} alt="Microsoft" />
+                <span>Continue with Microsoft</span>
+              </button>
+
+              <button type="button">
+                <img src={brandLogos.entra} alt="Microsoft Entra ID" />
+                <span>
+                  Continue with Microsoft Entra ID
+                  <small>Work / School Account</small>
+                </span>
+              </button>
+            </div>
+
+            <div className="auth-divider">
+              <span>OR</span>
+            </div>
+
+            {isSignUp && (
+              <label>
+                Full Name
+                <input type="text" placeholder="Your full name" />
+              </label>
+            )}
+
+            <label>
+              Email Address
+              <input type="email" placeholder="you@company.com" />
+            </label>
+
+            <label>
+              Password
+              <div className="password-field">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
+                  }
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+              </div>
+            </label>
+
+            {!isSignUp && (
+              <button className="forgot-password" type="button">
+                Forgot password?
+              </button>
+            )}
+
+            <button className="auth-submit" type="button">
+              {isSignUp ? "Create Account" : "Sign In"}
+            </button>
+
+            <p className="auth-switch">
+              {isSignUp
+                ? "Already have an account?"
+                : "Don't have an account?"}
+
+              <button
+                type="button"
+                onClick={() =>
+                  setMode(isSignUp ? "signin" : "signup")
+                }
+              >
+                {isSignUp ? "Sign In" : "Create account"}
+              </button>
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 }

@@ -3,14 +3,14 @@ import LandingPage from "./pages/LandingPage.jsx";
 import AuthPage from "./pages/AuthPage.jsx";
 
 export default function App() {
-  const [currentPage, setCurrentPage] = useState("landing");
+  const [page, setPage] = useState("landing");
 
-  const handleNavigate = (page) => {
-    setCurrentPage(page);
+  const handleNavigate = (nextPage) => {
+    setPage(nextPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  return currentPage === "auth" ? (
+  return page === "auth" ? (
     <AuthPage onNavigate={handleNavigate} />
   ) : (
     <LandingPage onNavigate={handleNavigate} />
